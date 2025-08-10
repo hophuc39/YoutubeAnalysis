@@ -4,6 +4,7 @@ import ffmpegPath from 'ffmpeg-static';
 import path from 'path';
 import fs from 'fs';
 import { Downloader } from 'ytdl-mp3';
+import { audioToTranscript } from './elevenLabsService';
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
@@ -85,7 +86,7 @@ export const convertToWav = async (inputDir: string, outputDir?: string): Promis
     fs.mkdirSync(saveDir, { recursive: true });
   }
 
-  const outputFile = path.join(saveDir, `${path.parse(inputDir).name}.wav`);
+  const outputFile = path.join(saveDir, `youtube_audio_${Date.now()}.wav`);
 
   return new Promise((resolve, reject) => {
     ffmpeg(inputDir)
@@ -108,7 +109,7 @@ export const convertToWav = async (inputDir: string, outputDir?: string): Promis
   });
 }
 
-export const getYoutubeSong = async (url: string, outputDir?: string) => {
+export const analyzeAudio = async (url: string, outputDir?: string) => {
   if (!outputDir) {
     outputDir = path.resolve(__dirname, '../../audios');
   }
@@ -123,5 +124,7 @@ export const getYoutubeSong = async (url: string, outputDir?: string) => {
   })
 
   const mp3Path = (await downloader.downloadSong(url)).outputFile;
-  return await convertToWav(mp3Path, outputDir);
+  const wavPath = await convertToWav(mp3Path, outputDir);
+
+  return audioToTranscript(wavPath);
 }
