@@ -7,6 +7,7 @@ import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 
 
 function App() {
@@ -26,9 +27,11 @@ function App() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-      // delay for ui testing
-      await new Promise((resolve) => setTimeout(resolve, 1500));  
-      console.log("Submitted URL:", data.youtubeUrl);
+      const response = await axios.post('http://localhost:5000/analyze', {
+        url: data.youtubeUrl,
+      });
+
+      console.log("Response data", response.data);
     } finally {
       setLoading(false);
     }

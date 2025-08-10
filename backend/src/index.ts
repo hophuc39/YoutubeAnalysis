@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { captureVideoThumbnail } from "./services/puppeteerService";
 
 dotenv.config();
 const app = express();
@@ -11,7 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Swagger setup
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -30,6 +30,13 @@ const swaggerOptions = {
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.post("/analyze", async (req, res) => {
+  const { url } = req.body;
+  const filePath =  await captureVideoThumbnail(url as string)
+
+  res.json({ status: "success", message: "Thumbnail captured successfully", filePath });
+});
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
