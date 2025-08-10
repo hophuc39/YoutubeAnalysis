@@ -2,9 +2,6 @@ import puppeteer from 'puppeteer';
 import path from 'path';
 import fs from 'fs';
 
-const log = (...args: any[]) => console.log('[puppeteerService]', ...args);
-
-
 export const captureVideoThumbnail = async (url: string, outputDir?: string): Promise<string> => {
   const defaultDir = path.resolve(__dirname, '../../thumbnails');
   const saveDir = outputDir || defaultDir;

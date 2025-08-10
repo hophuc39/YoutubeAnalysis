@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { captureVideoThumbnail } from "./services/puppeteerService";
+import { convertToWav, getVideoAudioTrack, getYoutubeSong } from "./services/audioService";
 
 dotenv.config();
 const app = express();
@@ -33,9 +34,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.post("/analyze", async (req, res) => {
   const { url } = req.body;
-  const filePath =  await captureVideoThumbnail(url as string)
+  const thumbnailPath = await captureVideoThumbnail(url as string);
+  const audioPath = await getYoutubeSong(url as string);
 
-  res.json({ status: "success", message: "Thumbnail captured successfully", filePath });
+  res.json({ status: "success", message: "Video analyzed successfully", thumbnailPath, audioPath });
 });
 
 app.get("/", (req, res) => {
