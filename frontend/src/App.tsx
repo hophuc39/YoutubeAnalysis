@@ -27,7 +27,7 @@ function App() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/analyze', {
+      const response = await axios.post('http://localhost:5000/api/analyze', {
         url: data.youtubeUrl,
       });
 
