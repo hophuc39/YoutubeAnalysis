@@ -2,10 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { captureVideoThumbnail } from "./services/puppeteerService";
-import { analyzeAudio } from "./services/audioService";
+import { router } from "./routes";
 
 dotenv.config();
 const app = express();
@@ -13,32 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Youtube Analysis API",
-      version: "1.0.0",
-      description: "API documentation for Youtube Analysis backend",
-    },
-    servers: [
-      {
-        url: "http://localhost:5000",
-      },
-    ],
-  },
-  apis: ["./src/routes/*.ts", "./src/index.ts"],
-};
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.post("/analyze", async (req, res) => {
-  const { url } = req.body;
-  const thumbnailPath = await captureVideoThumbnail(url as string);
-  const analyzeResult = await analyzeAudio(url as string);
-
-  res.json({ status: "success", message: "Video analyzed successfully", thumbnailPath, analyzeResult });
-});
+router(app);
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
@@ -47,5 +19,3 @@ app.get("/", (req, res) => {
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });
-
-console.log("Swagger docs available at http://localhost:5000/api-docs");
