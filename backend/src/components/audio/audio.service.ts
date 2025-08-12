@@ -16,7 +16,7 @@ const log = (...args: any[]) => console.log('[audioService]', ...args);
 
 export const getVideoAudioTrack = async (url: string, outputDir?: string): Promise<string> => {
     log('Starting audio download and conversion');
-    const defaultDir = path.resolve(__dirname, '../../audios');
+    const defaultDir = path.resolve(__dirname, '../../data/audios');
     const saveDir = outputDir || defaultDir;
 
     if (!fs.existsSync(saveDir)) {
@@ -111,7 +111,7 @@ export const convertToWav = async (inputDir: string, outputDir?: string): Promis
 
 export const analyzeAudio = async (url: string, outputDir?: string) => {
     if (!outputDir) {
-        outputDir = path.resolve(__dirname, '../../audios');
+        outputDir = path.resolve(__dirname, '../../data/audios');
     }
 
     if (!fs.existsSync(outputDir)) {

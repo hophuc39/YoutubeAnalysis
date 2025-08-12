@@ -10,7 +10,7 @@ class AiDetectorService {
         this.aiDetectorApiKey = process.env.AI_DETECTOR_API_KEY || 'default';
     }
 
-    async detectAiContent(text: string): Promise<boolean> {
+    async detectAiContent(text: string): Promise<any> {
         try {
             const response = await axios.post(`${this.aiDetectorApiUrl}/aidetect`, {
                 key: this.aiDetectorApiKey, text,

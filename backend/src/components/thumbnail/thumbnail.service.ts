@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 export const captureVideoThumbnail = async (url: string, outputDir?: string): Promise<string> => {
-    const defaultDir = path.resolve(__dirname, '../../thumbnails');
+    const defaultDir = path.resolve(__dirname, '../../data/thumbnails');
     const saveDir = outputDir || defaultDir;
 
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
