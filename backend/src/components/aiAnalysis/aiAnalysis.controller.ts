@@ -14,7 +14,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
         const analyzeResult = await analyzeAudio(url as string);
         const result: { score: number, sentence_scores: { score: number, sentence: string }[] } = await aiDetectorService.detectAiContent(analyzeResult.text);
 
-        const resultId = `anaylyze_${Date.now()}`;
+        const resultId = `analysis_${Date.now()}`;
         const jsonResult = JSON.stringify({
             id: resultId,
             overall_ai_probability: result.score,
@@ -25,7 +25,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
             })),
         });
 
-        const resultsDir = process.env.DATA_STRORAGE_PATH + "/analysisResults";
+        const resultsDir = process.env.DATA_STORAGE_PATH + "/analysisResults";
         await fs.mkdir(resultsDir, { recursive: true });
         const filePath = path.join(resultsDir, `${resultId}.json`);
         await fs.writeFile(filePath, jsonResult, "utf-8");
@@ -34,7 +34,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
             status: "success",
             message: "Video analyzed successfully",
             id: resultId,
-            thumbnailPath: process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailPath.split("/").pop(), // return only the filename
+            thumbnailPath: process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailPath.split('\\').pop(), // return only the filename
             analyzeResult: result,
         });
     } catch (error) {
@@ -47,7 +47,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
     }
 }
 
-export const getAnalysisResult = async (req: Request, res: Response) => {
+export const getAnalysisResultById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const filePath = process.env.DATA_STORAGE_PATH + "/analysisResults/" + `${id}.json`;
@@ -63,6 +63,33 @@ export const getAnalysisResult = async (req: Request, res: Response) => {
         res.status(404).json({
             status: "error",
             message: "Analysis result not found",
+            error: error,
+        });
+    }
+}
+
+export const getAnalysisResults = async (req: Request, res: Response) => {
+    try {
+        const resultsDir = process.env.DATA_STORAGE_PATH + "/analysisResults";
+        const files = await fs.readdir(resultsDir);
+        const results = [];
+
+        for (const file of files) {
+            if (file.endsWith(".json")) {
+                const data = await fs.readFile(path.join(resultsDir, file), "utf-8");
+                results.push(JSON.parse(data));
+            }
+        }
+
+        res.json({
+            status: "success",
+            message: "All analysis results retrieved successfully",
+            results,
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: "Failed to retrieve analysis results",
             error: error,
         });
     }

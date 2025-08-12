@@ -7,8 +7,6 @@ class TransciptService {
 
     constructor() {
         const apiKey = process.env.ELEVENLABS_API_KEY || "";
-        const maskedKey = apiKey ? apiKey.slice(0, 4) + "****" + apiKey.slice(-4) : "(empty)";
-        console.log(`[TranscriptService] ElevenLabs API Key: ${apiKey}`);
         this.elevenLabs = new ElevenLabsClient({
             apiKey,
         });

@@ -38,7 +38,18 @@ aiAnalysisRouter.post("/analyze", aiAnalysisController.analyzeVideo);
  *       200:
  *         description: Analysis result for the given ID
  */
-aiAnalysisRouter.get("/result/:id", aiAnalysisController.getAnalysisResult);
+aiAnalysisRouter.get("/result/:id", aiAnalysisController.getAnalysisResultById);
+
+/**
+ * @openapi
+ * /api/result:
+ *   get:
+ *     summary: Get all analysis results
+ *     responses:
+ *       200:
+ *         description: List of all analysis results
+ */
+aiAnalysisRouter.get("/result", aiAnalysisController.getAnalysisResults);
 
 export default aiAnalysisRouter;
 
