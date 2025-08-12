@@ -23,5 +23,22 @@ const aiAnalysisRouter = express.Router();
  */
 aiAnalysisRouter.post("/analyze", aiAnalysisController.analyzeVideo);
 
+/**
+ * @openapi
+ * /api/result/{id}:
+ *   get:
+ *     summary: Get analysis result by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Analysis result for the given ID
+ */
+aiAnalysisRouter.get("/result/:id", aiAnalysisController.getAnalysisResult);
+
 export default aiAnalysisRouter;
 

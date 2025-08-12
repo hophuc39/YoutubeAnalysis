@@ -44,3 +44,24 @@ export const analyzeVideo = async (req: Request, res: Response) => {
         });
     }
 }
+
+export const getAnalysisResult = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const filePath = path.join(__dirname, "../../../data/anaylzedResults", `${id}.json`);
+        const data = await fs.readFile(filePath, "utf-8");
+        const result = JSON.parse(data);
+
+        res.json({
+            status: "success",
+            message: "Analysis result retrieved successfully",
+            result,
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "error",
+            message: "Analysis result not found",
+            error: error,
+        });
+    }
+}
