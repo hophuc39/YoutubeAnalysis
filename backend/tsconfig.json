@@ -1,10 +1,15 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "resolveJsonModule": true
-  },
   "include": [
     "src"
-  ]
+  ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "target": "es2022",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  }
 }

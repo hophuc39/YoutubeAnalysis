@@ -4,6 +4,8 @@ import ffmpegPath from 'ffmpeg-static';
 import path from 'path';
 import fs from 'fs';
 import { Downloader } from 'ytdl-mp3';
+import "dotenv/config";
+
 import transcriptService from '../transcript/transcript.service';
 
 if (ffmpegPath) {
@@ -16,7 +18,7 @@ const log = (...args: any[]) => console.log('[audioService]', ...args);
 
 export const getVideoAudioTrack = async (url: string, outputDir?: string): Promise<string> => {
     log('Starting audio download and conversion');
-    const defaultDir = path.resolve(__dirname, '../../data/audios');
+    const defaultDir = process.env.DATA_STORAGE_PATH + "/audios";
     const saveDir = outputDir || defaultDir;
 
     if (!fs.existsSync(saveDir)) {
@@ -111,7 +113,7 @@ export const convertToWav = async (inputDir: string, outputDir?: string): Promis
 
 export const analyzeAudio = async (url: string, outputDir?: string) => {
     if (!outputDir) {
-        outputDir = path.resolve(__dirname, '../../data/audios');
+        outputDir = process.env.DATA_STORAGE_PATH + "/audios";
     }
 
     if (!fs.existsSync(outputDir)) {

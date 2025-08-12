@@ -1,9 +1,10 @@
 import puppeteer from 'puppeteer';
 import path from 'path';
 import fs from 'fs';
+import "dotenv/config";
 
 export const captureVideoThumbnail = async (url: string, outputDir?: string): Promise<string> => {
-    const defaultDir = path.resolve(__dirname, '../../data/thumbnails');
+    const defaultDir = process.env.DATA_STORAGE_PATH + "/thumbnails";
     const saveDir = outputDir || defaultDir;
 
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
@@ -32,6 +33,7 @@ export const captureVideoThumbnail = async (url: string, outputDir?: string): Pr
 
         const fileName = `youtube_thumbnail_${Date.now()}.png`;
         const filePath = path.join(saveDir, fileName);
+
         await videoElement.screenshot({ path: filePath as `${string}.png` });
 
         await browser.close();

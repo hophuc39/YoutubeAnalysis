@@ -1,4 +1,3 @@
-import { json } from "stream/consumers";
 import aiDetectorService from "../aiDetector/aiDetector.service";
 import { analyzeAudio } from "../audio/audio.service";
 import { captureVideoThumbnail } from "../thumbnail/thumbnail.service";
@@ -6,6 +5,7 @@ import { captureVideoThumbnail } from "../thumbnail/thumbnail.service";
 import { Request, Response } from "express";
 import { promises as fs } from "fs";
 import path from "path";
+import "dotenv/config";
 
 export const analyzeVideo = async (req: Request, res: Response) => {
     const { url } = req.body;
@@ -25,7 +25,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
             })),
         });
 
-        const resultsDir = path.resolve(__dirname, "../../../data/anaylzedResults");
+        const resultsDir = process.env.DATA_STRORAGE_PATH + "/analysisResults";
         await fs.mkdir(resultsDir, { recursive: true });
         const filePath = path.join(resultsDir, `${resultId}.json`);
         await fs.writeFile(filePath, jsonResult, "utf-8");
@@ -33,10 +33,12 @@ export const analyzeVideo = async (req: Request, res: Response) => {
         res.json({
             status: "success",
             message: "Video analyzed successfully",
-            thumbnailPath,
+            id: resultId,
+            thumbnailPath: process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailPath.split("/").pop(), // return only the filename
             analyzeResult: result,
         });
     } catch (error) {
+        console.error(error); // log detailed error
         res.status(500).json({
             status: "error",
             message: "Failed to analyze video",
@@ -48,7 +50,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
 export const getAnalysisResult = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
-        const filePath = path.join(__dirname, "../../../data/anaylzedResults", `${id}.json`);
+        const filePath = process.env.DATA_STORAGE_PATH + "/analysisResults/" + `${id}.json`;
         const data = await fs.readFile(filePath, "utf-8");
         const result = JSON.parse(data);
 
