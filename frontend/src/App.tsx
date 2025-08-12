@@ -11,6 +11,7 @@ import axios from 'axios';
 
 
 function App() {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const formSchema = z.object({
     youtubeUrl: z.url("Invalid YouTube URL"),
   })
@@ -27,7 +28,7 @@ function App() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/analyze', {
+      const response = await axios.post(`${apiUrl}/api/analyze`, {
         url: data.youtubeUrl,
       });
 
