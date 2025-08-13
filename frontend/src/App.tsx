@@ -82,16 +82,16 @@ function App() {
         </form>
       </FormProvider>
 
-      {error && 
-      <div className="grid w-full max-w-xl items-start gap-4 mt-4">
-        <Alert variant="destructive">
-          <AlertCircleIcon />
-          <AlertTitle className='text-left'>Failed to analyze the video.</AlertTitle>
-          <AlertDescription>
-            <p>{error}</p>
-          </AlertDescription>
-        </Alert>
-      </div>
+      {error &&
+        <div className="grid w-full max-w-xl items-start gap-4 mt-4">
+          <Alert variant="destructive">
+            <AlertCircleIcon />
+            <AlertTitle className='text-left'>Failed to analyze the video.</AlertTitle>
+            <AlertDescription>
+              <p>{error}</p>
+            </AlertDescription>
+          </Alert>
+        </div>
       }
 
       {result && (
@@ -101,7 +101,7 @@ function App() {
             <img
               src={result.thumbnailPath.replace('localhost', window.location.hostname)}
               alt="Thumbnail"
-              style={{ maxWidth: 320, borderRadius: 8 }}
+              style={{ borderRadius: 8 }}
               onError={e => (e.currentTarget.style.display = 'none')}
             />
           </div>

@@ -37,7 +37,7 @@ export const captureVideoThumbnail = async (url: string, outputDir?: string): Pr
         await videoElement.screenshot({ path: filePath as `${string}.png` });
 
         await browser.close();
-        return filePath;
+        return fileName;
     } catch (err) {
         await browser.close();
         throw err;

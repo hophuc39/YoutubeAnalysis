@@ -10,7 +10,8 @@ import "dotenv/config";
 export const analyzeVideo = async (req: Request, res: Response) => {
     const { url } = req.body;
     try {
-        const thumbnailPath = await captureVideoThumbnail(url as string);
+        const thumbnailName = await captureVideoThumbnail(url as string);
+        const thumbnailUrl = process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailName;
         const analyzeResult = await analyzeAudio(url as string);
         const result: { score: number, sentence_scores: { score: number, sentence: string }[] } = await aiDetectorService.detectAiContent(analyzeResult.text);
 
@@ -19,6 +20,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
             id: resultId,
             overall_ai_probability: result.score,
             text: analyzeResult.text,
+            thumbnailPath: thumbnailUrl,
             sentences: result.sentence_scores.map((item) => ({
                 ai_probability: item.score,
                 sentence: item.sentence,
@@ -34,7 +36,7 @@ export const analyzeVideo = async (req: Request, res: Response) => {
             status: "success",
             message: "Video analyzed successfully",
             id: resultId,
-            thumbnailPath: process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailPath.split('\\').pop(), // return only the filename
+            thumbnailPath: process.env.YOUTUBE_ANALYSIS_BASE_URL + "/thumbnails/" + thumbnailName,
             analyzeResult: result,
         });
     } catch (error) {
