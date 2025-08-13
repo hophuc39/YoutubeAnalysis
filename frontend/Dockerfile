@@ -23,8 +23,8 @@ FROM nginx:stable-alpine
 # Copy file đã build vào thư mục phục vụ của nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Mở port 80 để truy cập
-EXPOSE 80
+# Mở port 5173 để truy cập
+EXPOSE 5173
 
 # Chạy nginx
 CMD ["nginx", "-g", "daemon off;"]
