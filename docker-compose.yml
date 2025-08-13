@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8080:5000"
+      - "8080:8080"
     env_file:
       - ./backend/.env
     restart: always
@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "3000:80"
+      - "5173:5173"
     restart: always
     depends_on:
       - backend
